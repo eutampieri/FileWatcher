@@ -1,5 +1,4 @@
-use log::{debug, error, info};
-use log::{LevelFilter, SetLoggerError};
+use log::{debug, error, info, LevelFilter};
 use notify::{watcher, RecursiveMode, Watcher};
 use std::sync::mpsc::channel;
 use std::time::Duration;
