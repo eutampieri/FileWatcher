@@ -1,0 +1,27 @@
+image: "rust:latest"
+
+
+# Use cargo to build the project
+build:
+  stage: build
+  script:
+    - rustc --version && cargo --version  # Print version info for debugging
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/".insteadOf "ssh://git@gitlab.com/"
+    - cargo build --release
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - target/
+  artifacts:
+    paths:
+      - target/release/cdwatcher
+    expire_in: 1 hour
+
+deploy:
+  stage: deploy
+  image: "alpine:latest"
+  script:
+    - apk add -U openssh-client
+    - chmod 400 "$SSH_PRIV_KEY"
+    - scp -i "$SSH_PRIV_KEY" -o StrictHostKeyChecking=no target/release/cdwatcher cinepedagna@gcp.cptech.ovh:/home/cinepedagna/pool
+  needs: ["build"]
