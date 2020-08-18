@@ -58,5 +58,7 @@ fn main() {
         });
     }
     info!("Waiting for events...");
-    loop {}
+    loop {
+        std::thread::sleep_ms(60000);
+    }
 }
